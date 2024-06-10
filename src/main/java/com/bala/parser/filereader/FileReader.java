@@ -25,21 +25,16 @@ public class FileReader {
      */
     public List<String> readFile(@Nullable String receivedPath) {
         Path filePath = receivedPath != null
-                ? Paths.get(receivedPath)
-                : Paths.get(DEFAULT_READ_PATH);
-        List<String> lines = new ArrayList<>();
+            ? Paths.get(receivedPath)
+            : Paths.get(DEFAULT_READ_PATH);
         try {
-             lines = Files.readAllLines(filePath);
-            for (String line : lines) {
-                System.out.println(line);
-            }
-            return lines;
+            return Files.readAllLines(filePath);
         } catch (IOException e) {
             String message = String.format(
                 "Error occurred while trying to get file :- %s",
                 receivedPath != null ? receivedPath : DEFAULT_READ_PATH);
             log.error(message, e);
-            return lines;
+            return new ArrayList<>();
         }
     }
 }

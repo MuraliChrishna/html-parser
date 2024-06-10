@@ -39,6 +39,7 @@ public class TestHeaderParser {
             {"###someText", true},
             {"someText##", false},
             {"", false},
+            {"#######code", false}
         };
     }
 
@@ -61,7 +62,7 @@ public class TestHeaderParser {
             {"#", "<h1></h1>"},
             {"# [hello](http://google.com)", "<h1><a href=\"http://google.com\">hello</a></h1>"},
             {"# [google](https://google.com) [intuit](https://intuit.com)",
-            "<h1><a href=\"https://google.com\">google</a><a href=\"https://intuit.com\">intuit</a></h1>"},
+            "<h1><a href=\"https://google.com\">google</a> <a href=\"https://intuit.com\">intuit</a></h1>"},
             {"##", "<h2></h2>"},
             {"####### out of scope hashes", "####### out of scope hashes"},
             {"# hash at the end #", "<h1>hash at the end #</h1>"}

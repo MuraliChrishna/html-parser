@@ -72,6 +72,10 @@ public class HeaderParser {
      * @return True if the string starts with # if not False.
      */
     public boolean isHeader(String line) {
-        return !line.isEmpty() && line.charAt(0) == '#';
+        if (!line.isEmpty() && line.charAt(0) == '#') {
+           int length = line.length();
+           return length <= 6 || line.charAt(6) != '#';
+        }
+        return false;
     }
 }

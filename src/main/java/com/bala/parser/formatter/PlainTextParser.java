@@ -48,10 +48,9 @@ public class PlainTextParser {
                 if (isEndIndex[3] == -1 || isEndIndex[3] == line.length()) {
                     return parsedString + line.substring(i);
                 } else {
-                    String parsedLine = String.format("<a href=\"%s\">%s</a>",
+                    parsedString.append(String.format("<a href=\"%s\">%s</a>",
                             line.substring(isEndIndex[2]+1, isEndIndex[3]),
-                            line.substring(isEndIndex[0], isEndIndex[1]));
-                    parsedString.append(parsedLine.replaceAll("\\\\", ""));
+                            line.substring(isEndIndex[0], isEndIndex[1])));
                     i = isEndIndex[3];
                 }
             } else {
@@ -64,50 +63,38 @@ public class PlainTextParser {
     /**
      * Given index of '[', the function will return array of open and close index of [] and ().
      *
+     *
      * @param text actual input string.
      * @param index index of '['.
      * @return array of integers representing indexes of [] and ().
      */
     public int[] getEnd(String text, int index) {
         int count = 1;
-        int runningIndex = index+1;
         int lastOpenIndex = index;
         int[] status = {-1, -1, -1, -1};
-        while (runningIndex < text.length()) {
-             //  Here we will increment the count by 1 to make sure to handle cases like. "[someText[someText](hyperlink)"
-             //  in the above example the most recent open index matters so will store the most recent open index in lastOpenIndex.
-            if (text.charAt(runningIndex) == '[') {
-                lastOpenIndex = runningIndex;
+        for (int i = index + 1; i < text.length(); i++) {
+            if (text.charAt(i) == '[') {
+                lastOpenIndex = i;
                 count += 1;
-            } else if (text.charAt(runningIndex) == ']') {
-                // we check if the text doesn't have a link by checking if we reached the end.
-                if (runningIndex + 1 < text.length()) {
-                     // here for cases like [someText[someText]someText](hyperlink) we want to make sure we are at the correct End.
-                     // we track the correct end by the counter
-                    if (text.charAt(runningIndex + 1) != '(') {
+            } else if (text.charAt(i) == ']') {
+                if (i + 1 < text.length()) {
+                    if (text.charAt(i + 1) != '(') {
                         if (count > 1) {
                             count -= 1;
                         } else {
-                            // if the count is not greater than 1 we reached a case like []]someText
-                            return status;
+                            break;
                         }
                     } else {
-                         // this case is when we saw the actual hyperlink cases lik
-                         // [[]]() return the first openIndex, close index and hyperLinkOpenIndex.
-                         // [[]() return second open [ index and close index and hyperLinkOpenIndex.
-                         // []]() return openIndex, secondClose Index and hyperLinkOpenIndex.
                         if (count == 1) {
-                            return new int[]{index, runningIndex, runningIndex+1, getHyperLinkEnd(text, runningIndex+1)};
+                            return new int[]{index, i, i + 1, getHyperLinkEnd(text, i + 1)};
                         } else {
-                            return new int[]{lastOpenIndex, runningIndex, runningIndex+1, getHyperLinkEnd(text, runningIndex+1)};
+                            return new int[]{lastOpenIndex, i, i + 1, getHyperLinkEnd(text, i + 1)};
                         }
                     }
                 } else {
-                    //we Reached the end without the hyperlink so will close
-                    return status;
+                    break;
                 }
             }
-            runningIndex += 1;
         }
         return status;
     }
@@ -128,6 +115,7 @@ public class PlainTextParser {
 
     /**
      * Given index of '[', the function will return array of open and close index of [] and ().
+     * Not in use will remove based on the discussion.
      *
      * @param text actual input string.
      * @param index index of '['.

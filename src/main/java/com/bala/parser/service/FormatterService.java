@@ -47,7 +47,6 @@ public class FormatterService {
             String docLine = docLines.get(i);
             String trimmedLine = docLine.trim();
             if (trimmedLine.isEmpty()) {
-                parsedLines.add(docLine);
                 continue;
             }
             if (headerParser.isHeader(trimmedLine)) {

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class FileWriter {
 
-    private static final String DEFAULT_WRITE_PATH = "/home/balapolisetti/Documents/Projects/parserExamples/output.txt";
+    private static final String DEFAULT_WRITE_PATH = "/home/balapolisetti/Documents/Projects/parserExamples/output.html";
 
     /**
      * Function to write the parsed lines in a given doc path to a new file with HTML tags.
